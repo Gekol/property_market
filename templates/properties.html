@@ -1,0 +1,179 @@
+{% extends "index.html" %}
+
+{% block styles %}
+    .add-property-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    }
+    .add-property {
+    display:none;
+    justify-content: center;
+    width: 50%;
+    }
+    .add-property__link {
+    text-decoration: none;
+    font-size: 22px;
+    }
+    .property-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    }
+    .property-form__field-block {
+    display: flex;
+    justify-content: space-between;
+    }
+    .property-form__field {
+    box-sizing: border-box;
+    width: 50%;
+    }
+    .property-block {
+    display: flex;
+    justify-content: space-around;
+    }
+    .property {
+    width: 30%;
+    box-sizing: border-box;
+    border: 3px solid black;
+    padding: 10px;
+    margin-top: 20px;
+    }
+    .property_characteristic {
+    width: fit-content;
+    }
+    .property__content {
+    display: flex;
+    justify-content: space-between;
+    }
+    .buy-block {
+    display:flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 30px;
+    }
+    .buy-block__link {
+    text-align: center;
+    text-decoration: none;
+    width: 50px;
+    height: 20px;
+    border-radius: 25%;
+    }
+    .buy-block__link__buy {
+    background-color: yellowgreen;
+    }
+    .buy-block__link__rent {
+    background-color: sienna;
+    }
+{% endblock %}
+
+{% block main %}
+    {% if user.is_staff %}
+        <div class="add-property-wrapper">
+            <a href="/add_property" class="add-property__link">Add property</a>
+            <div class="add-property">
+                <form class="property-form" action="" method="post">
+                    {% csrf_token %}
+                    <div class="property-form__field-block">
+                        <label for="type">Type: </label>
+                        <select id="type" name="type" class="property-form__field">
+                            <option value="house">House</option>
+                            <option value="apartments">Apartments</option>
+                        </select>
+                    </div>
+                    <div class="property-form__field-block">
+                        <label for="address">Address: </label>
+                        <input id="address" required name="address" type="text"
+                               class="property-form__field">
+                    </div>
+                    <div class="property-form__field-block">
+                        <label for="purchase_price">Purchase price: </label>
+                        <input id="purchase_price" required name="purchase_price" type="number"
+                               class="property-form__field">
+                    </div>
+                    <div class="property-form__field-block">
+                        <label for="rent_price">Rent price(hrn/price): </label>
+                        <input id="rent_price" required name="rent_price" type="number" class="property-form__field">
+                    </div>
+                    <div class="property-form__field-block">
+                        <label for="description">Description: </label>
+                        <textarea id="description" required name="description"
+                                  class="property-form__field"></textarea>
+                    </div>
+                    <div class="property-form__field-block">
+                        <label for="rooms_number">Room number: </label>
+                        <input id="rooms_number" required name="rooms_number" type="number"
+                               class="property-form__field">
+                    </div>
+                    <div class="property-form__field-block">
+                        <label for="owner">Owner: </label>
+                        <select id="owner" name="owner" class="property-form__field">
+                            {% for current_user in users %}
+                                <option value="{{ current_user.id }}">{{ current_user.first_name }}
+                                    {{ current_user.last_name }}</option>
+                            {% endfor %}]
+                        </select>
+                    </div>
+                    <input type="submit" value="Add property">
+                </form>
+            </div>
+        </div>
+
+    {% endif %}
+    <div class="property-block">
+        {% for property in properties %}
+            <div class="property">
+                <div class="property__content">
+                    <div>Type:</div>
+                    <div>{{ property.type|title }}</div>
+                </div>
+                <div class="property__content">
+                    <div class="property_characteristic">Address:</div>
+                    <div>{{ property.address }}</div>
+                </div>
+                <div class="property__content">
+                    <div class="property_characteristic">Rooms:</div>
+                    <div>{{ property.rooms_number }}</div>
+                </div>
+                <div class="property__content">
+                    <div class="property_characteristic">Description:</div>
+                    <div>{{ property.description }}</div>
+                </div>
+                <div class="property__content">
+                    <div class="property_characteristic">Purchase price:</div>
+                    <div>{{ property.purchase_price }}</div>
+                </div>
+                <div class="property__content">
+                    <div class="property_characteristic">Rent price(hrn/price):</div>
+                    <div>{{ property.rent_price }}</div>
+                </div>
+                <div class="buy-block">
+                    {% if user.is_authenticated %}
+                        <a href="properties/purchase/{{ property.id|floatformat:"0" }}"
+                           class="buy-block__link buy-block__link__buy">Buy</a>
+                        <a href="properties/rent/{{ property.id }}"
+                           class="buy-block__link buy-block__link__rent">Rent</a>
+                    {% else %}
+                        <p>Log in to make purchases!</p>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block js_scripts %}
+    <script>
+        let add_form_button = document.querySelector('.add-property__link');
+        add_form_button.addEventListener('click', function (e) {
+            e.preventDefault();
+            let add_form = document.querySelector('.add-property');
+            if (add_form.style.display === 'flex') {
+                add_form.style.display = 'none';
+            } else {
+                add_form.style.display = 'flex';
+            }
+        })
+    </script>
+{% endblock %}

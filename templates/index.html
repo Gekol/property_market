@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Main{% endblock %}
+{% block nav_styles%}
+    .navigation {
+        display: flex;
+        justify-content: space-around;
+    }
+    .navigation a {
+        font-family: "Bitstream Vera Sans Mono", Monaco, "Courier New", Courier, monospace;
+        text-decoration: none;
+    }
+{% endblock %}
+{% block styles %}
+    .greetings-text {
+        text-align: center;
+    }
+{% endblock %}
+
+{% block navigation %}
+    <a href="/">Main</a>
+    <a href="/properties">Properties</a>
+    {% if user.is_authenticated %}
+        <a href="/orders">Orders</a>
+        <a href="/log_out">Log out</a>
+    {% else %}
+        <a href="/log_in">Log in</a>
+        <a href="/register">Register</a>
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <h1 class="greetings-text">
+        Need a place to live? We'll help you!
+    </h1>
+{% endblock %}

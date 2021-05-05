@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        {% block nav_styles%}{% endblock %}
+        {% block styles %}{% endblock %}
+    </style>
+</head>
+<body>
+<nav class="navigation">
+    {% block navigation %}{% endblock %}
+</nav>
+<header class="header">
+    {% block header %}{% endblock %}
+</header>
+<main class="main-content">
+    {% block main %}{% endblock %}
+</main>
+<footer class="footer">
+    {% block footer %}{% endblock %}
+</footer>
+{% block js_scripts %}{% endblock %}
+</body>
+</html>

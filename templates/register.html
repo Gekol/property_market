@@ -1,0 +1,112 @@
+{% extends "index.html" %}
+
+{% block styles %}
+    .register-form-wrapper {
+    display: flex;
+    }
+
+    .register-form {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    width: 20%;
+    }
+
+    .register-form__header {
+    text-align: center;
+    }
+
+    .form-field {
+    display: flex;
+    position: relative;
+    margin-top: 10px;
+    justify-content: space-between;
+    }
+
+    .error-message {
+    position: absolute;
+    left: 300px;
+    color: red;
+    width: fit-content;
+    }
+
+    .error-message p {
+    margin: 0;
+    }
+
+    .register-button {
+    margin-top: 10px;
+    }
+{% endblock %}
+
+{% block main %}
+    <div class="register-form-wrapper">
+        <form action="" method="post" class="register-form">
+            {% csrf_token %}
+            <h1 class="register-form__header">Register</h1>
+            <div class="form-field">
+                <div class="form-field__label">
+                    <label for="username">Username</label>
+                </div>
+                <div class="form-field__input">
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="error-message">
+                    <p>{{ username_error }}</p>
+                </div>
+            </div>
+            <div class="form-field">
+                <div class="form-field__label">
+                    <label for="first_name">First name</label>
+                </div>
+                <div class="form-field__input">
+                    <input type="text" id="first_name" name="first_name" required>
+                </div>
+            </div>
+            <div class="form-field">
+                <div class="form-field__label">
+                    <label for="last_name">Last name</label>
+                </div>
+                <div class="form-field__input">
+                    <input type="text" id="last_name" name="last_name" required>
+                </div>
+            </div>
+            <div class="form-field">
+                <div class="form-field__label">
+                    <label for="email">Email</label>
+                </div>
+                <div class="form-field__input">
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="error-message">
+                    <p>{{ email_error }}</p>
+                </div>
+            </div>
+            <div class="form-field">
+                <div class="form-field__label">
+                    <label for="password">Password</label>
+                </div>
+                <div class="form-field__input">
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="error-message">
+                    <p>{{ validation_error }}</p>
+                </div>
+            </div>
+            <div class="form-field">
+                <div class="form-field__label">
+                    <label for="confirm_password">Confirm password</label>
+                </div>
+                <div class="form-field__input">
+                    <input type="password" id="confirm_password" name="confirm_password" required>
+                </div>
+                <div class="error-message">
+                    <p>{{ confirm_password_error }}</p>
+                </div>
+            </div>
+            <input type="submit" class="register-button" value="Register">
+        </form>
+    </div>
+
+
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "index.html" %}
+
+{% block styles %}
+    .orders-block {
+    display: flex;
+    justify-content: space-around;
+    }
+    .order {
+    width: 20%;
+    border: 3px solid black;
+    position: relative;
+    }
+    .order p {
+    text-align: center;
+    }
+{% endblock %}
+
+{% block main %}
+    <div class="orders-block">
+        {% for order in orders %}
+            <div class="order">
+                <p>Type: {{ order.type }}</p>
+                <p>Status: {{ order.status }}</p>
+                <p>Date: {{ order.date }}</p>
+                <p>Address: {{ order.property.address }}</p>
+                <p>Property type: {{ order.property.type }}</p>
+                <p>Price: {% if order.type == 'rent' %}
+                    {{ order.property.rent_price }}
+                {% else %}
+                    {{ order.property.purchase_price }}
+                {% endif %}</p>
+                <p>Username: {{ order.user }}</p>
+                <p>User first name: {{ order.user.first_name }}</p>
+                <p>User last name: {{ order.user.last_name }}</p>
+                <p>User email: {{ order.user.email }}</p>
+                {% if user.is_staff %}
+                    {% if order.status == 'new' %}
+                        <p><a href="orders/{{ order.id }}/in_progress">Start working</a></p>
+                    {% elif order.status == 'in_progress' %}
+                        <p><a href="orders/{{ order.id }}/done">Mark as done</a></p>
+                    {% endif %}
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
