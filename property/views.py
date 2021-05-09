@@ -15,10 +15,12 @@ class MainView(TemplateView):
 
 class PropertiesView(View):
     def get(self, request):
+        models.Log.objects.create(date=date.today(), type='view_properties', username=request.user.username)
         properties = models.Property.objects.filter(status="waiting")
         return render(request, "properties.html", {"properties": properties, "users": models.User.objects.all()})
 
     def post(self, request):
+        models.Log.objects.create(date=date.today(), type='add_property', username=request.user.username)
         models.Property.objects.create(description=request.POST["description"], type=request.POST["type"],
                                        address=request.POST["address"], purchase_price=request.POST["purchase_price"],
                                        rent_price=request.POST["rent_price"], owner_id=request.POST["owner"],
@@ -29,6 +31,7 @@ class PropertiesView(View):
 
 class LogOutView(View):
     def get(self, request):
+        models.Log.objects.create(date=date.today(), type='log_out', username=request.user.username)
         logout(request)
         return redirect('/')
 
@@ -40,6 +43,7 @@ class LogInView(View):
     def post(self, request):
         user = authenticate(username=request.POST["username"], password=request.POST["password"])
         if user is not None:
+            models.Log.objects.create(date=date.today(), type='log_in', username=user.username)
             login(request, user)
             return redirect("/properties")
         else:
@@ -48,8 +52,9 @@ class LogInView(View):
 
 class MakeOrder(View):
     def get(self, request, id):
+        models.Log.objects.create(date=date.today(), type='make_order', username=request.user.username)
         models.Order.objects.create(user_id=request.user.id, property_id=id, status='new',
-                                    type=request.path.split('/')[3], date=date.today())
+                                    type=request.path.split('/')[2], date=date.today())
         property = models.Property.objects.get(id=id)
         property.status = "in_progress"
         property.save()
@@ -58,6 +63,7 @@ class MakeOrder(View):
 
 class OrderView(View):
     def get(self, request):
+        models.Log.objects.create(date=date.today(), type='view_orders', username=request.user.username)
         if request.user.is_staff:
             return render(request, "orders.html", {"orders": models.Order.objects.all()})
         return render(request, "orders.html", {"orders": models.Order.objects.filter(user_id=request.user.id)})
@@ -110,6 +116,7 @@ class RegisterView(View):
         user = User.objects.create_user(username=username, password=password, email=email,
                                         first_name=request.POST["first_name"], last_name=request.POST["last_name"])
         authenticate(user)
+        models.Log.objects.create(date=date.today(), type='register', username=user.username)
         return redirect('/properties')
 
 
@@ -118,4 +125,6 @@ class ChangeOrderStatusView(View):
         order = models.Order.objects.get(id=id)
         order.status = 'in_progress' if 'in_progress' in request.path else 'done'
         order.save()
+        models.Log.objects.create(date=date.today(), type="change_status_to'{}'".format(order.status),
+                                  username=request.user.username)
         return redirect('/orders')

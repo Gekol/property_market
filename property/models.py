@@ -35,3 +35,12 @@ class Order(models.Model):
 
     def __str__(self):
         return self.user.username + " " + self.property.address + " " + str(self.date)
+
+
+class Log(models.Model):
+    date = models.DateField()
+    type = models.CharField(max_length=100)
+    username = models.CharField(max_length=100)
+
+    def __str__(self):
+        return "{0} {1} {2}".format(self.type, self.username, self.date)
